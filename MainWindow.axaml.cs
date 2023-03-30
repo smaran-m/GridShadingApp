@@ -1,9 +1,10 @@
+using System;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
-
+using Avalonia.VisualTree;
 
 namespace GridShadingApp;
 
@@ -11,7 +12,7 @@ public partial class MainWindow : Window
 {
     private const int numRows = 10;
     private const int numCols = 10;
-    private const int cellSize = 40;
+    private double cellSize;
     private SolidColorBrush defaultBrush = new SolidColorBrush(Colors.LightGray);
     //private SolidColorBrush shadedBrush = new SolidColorBrush(Colors.Black);
     private ImageBrush imageBrush = new ImageBrush(new Bitmap("Images/test.png"));
@@ -20,7 +21,46 @@ public partial class MainWindow : Window
     public MainWindow()
     {
         InitializeComponent();
-        CreateGrid();
+        this.Opened += MainWindow_Opened;
+        this.LayoutUpdated += MainWindow_LayoutUpdated;
+
+        // Event Handlers
+        void MainWindow_Opened(object sender, EventArgs e)
+        {
+            var windowSize = this.ClientSize;
+            cellSize = Math.Min(windowSize.Width / numCols, windowSize.Height / numRows);
+            CreateGrid();
+        }
+
+        void MainWindow_LayoutUpdated(object? sender, EventArgs e)
+        {
+            var windowSize = this.ClientSize;
+            double aspectRatio = (double)numCols / numRows;
+            double newWidth = windowSize.Width;
+            double newHeight = windowSize.Height;
+
+            if (newWidth / newHeight > aspectRatio)
+            {
+                newWidth = newHeight * aspectRatio;
+            }
+            else
+            {
+                newHeight = newWidth / aspectRatio;
+            }
+
+            this.ClientSize = new Size(newWidth, newHeight);
+
+            cellSize = Math.Min(newWidth / numCols, newHeight / numRows);
+
+            foreach (var child in mainGrid.Children)
+            {
+                if (child is Border cell)
+                {
+                    cell.Width = cellSize;
+                    cell.Height = cellSize;
+                }
+            }
+        }
     }
 
     private void CreateGrid()
