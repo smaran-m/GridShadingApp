@@ -1,7 +1,7 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         x:Class="GridShadingApp.MainWindow"
-        Title="Grid Shading App" Width="400" Height="400">
-    <Grid x:Name="mainGrid" Margin="0" Background="White">
+        Title="Grid Shading App" Width="1000" Height="1000">
+    <Grid x:Name="mainGrid" Margin="0" Background="Black">
     </Grid>
 </Window>
