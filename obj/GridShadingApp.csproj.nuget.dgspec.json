@@ -1,25 +1,31 @@
 {
   "format": 1,
   "restore": {
-    "/Users/smaran/Documents/GitHub/GridShadingApp/GridShadingApp.csproj": {}
+    "C:\\Users\\Smaran\\Documents\\Code\\projects\\GridShadingApp\\GridShadingApp.csproj": {}
   },
   "projects": {
-    "/Users/smaran/Documents/GitHub/GridShadingApp/GridShadingApp.csproj": {
+    "C:\\Users\\Smaran\\Documents\\Code\\projects\\GridShadingApp\\GridShadingApp.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/smaran/Documents/GitHub/GridShadingApp/GridShadingApp.csproj",
+        "projectUniqueName": "C:\\Users\\Smaran\\Documents\\Code\\projects\\GridShadingApp\\GridShadingApp.csproj",
         "projectName": "GridShadingApp",
-        "projectPath": "/Users/smaran/Documents/GitHub/GridShadingApp/GridShadingApp.csproj",
-        "packagesPath": "/Users/smaran/.nuget/packages/",
-        "outputPath": "/Users/smaran/Documents/GitHub/GridShadingApp/obj/",
+        "projectPath": "C:\\Users\\Smaran\\Documents\\Code\\projects\\GridShadingApp\\GridShadingApp.csproj",
+        "packagesPath": "C:\\Users\\Smaran\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Smaran\\Documents\\Code\\projects\\GridShadingApp\\obj\\",
         "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
         "configFilePaths": [
-          "/Users/smaran/.nuget/NuGet/NuGet.Config"
+          "C:\\Users\\Smaran\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
           "net6.0"
         ],
         "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -72,11 +78,15 @@
               "version": "[6.0.15, 6.0.15]"
             },
             {
-              "name": "Microsoft.NETCore.App.Host.osx-x64",
+              "name": "Microsoft.NETCore.App.Host.win-x64",
               "version": "[6.0.15, 6.0.15]"
             },
             {
               "name": "Microsoft.NETCore.App.Ref",
+              "version": "[6.0.15, 6.0.15]"
+            },
+            {
+              "name": "Microsoft.WindowsDesktop.App.Ref",
               "version": "[6.0.15, 6.0.15]"
             }
           ],
@@ -85,7 +95,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/7.0.202/RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.202\\RuntimeIdentifierGraph.json"
         }
       }
     }
