@@ -1,0 +1,8 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="GridShadingApp.GeneratedWindow"
+        Title="Generated Grid"
+        Width="1600"
+        Height="900">
+    <Grid x:Name="generatedGrid" />
+</Window>

@@ -1,12 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text.Json;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Media;
+using Avalonia.Media.Imaging;
 
 namespace GridShadingApp;
 
@@ -18,21 +18,22 @@ public partial class MainWindow : Window
     //private SolidColorBrush defaultBrush = new SolidColorBrush(Colors.White);
     private SolidColorBrush defaultBrush = new SolidColorBrush(Colors.Transparent);
     private SolidColorBrush shadedBrush = new SolidColorBrush(Colors.Black);
-
-    //private ImageBrush imageBrush = new ImageBrush(new Bitmap("resources/images/test.png"));
     private HashSet<Border> modifiedCells = new HashSet<Border>();
+    private Random r = new Random();
 
-
+    private string tileset = "default"; // default tileset
 
     public MainWindow()
     {
         InitializeComponent();
+        PopulateTilesetComboBox();
         //this.CanResize = false;
         this.Opened += MainWindow_Opened;
         mainGrid.PointerMoved += MainGrid_PointerMoved;
         saveButton.Click += SaveButton_Click;
         loadButton.Click += LoadButton_Click;
         resetButton.Click += ResetButton_Click;
+        generateButton.Click += GenerateButton_Click;
 
         // Event Handlers
         void MainWindow_Opened(object sender, EventArgs e)
@@ -218,4 +219,97 @@ public partial class MainWindow : Window
         CreateGrid();
     }
 
+    private void GenerateButton_Click(object sender, Avalonia.Interactivity.RoutedEventArgs e)
+    {
+        // Create a new GeneratedWindow
+        GeneratedWindow generatedWindow = new GeneratedWindow();
+
+        // Clone the grid with images
+        Grid clonedGrid = CloneGridWithImages(mainGrid);
+
+        // Set the cloned grid as the content of the new window
+        generatedWindow.FindControl<Grid>("generatedGrid").Children.Add(clonedGrid);
+
+        // Show the new window
+        generatedWindow.Show();
+    }
+
+    private Grid CloneGridWithImages(Grid sourceGrid)
+    {
+        Grid clonedGrid = new Grid();
+
+        // Clone row and column definitions
+        foreach (var row in sourceGrid.RowDefinitions)
+        {
+            clonedGrid.RowDefinitions.Add(new RowDefinition(row.Height));
+        }
+        foreach (var col in sourceGrid.ColumnDefinitions)
+        {
+            clonedGrid.ColumnDefinitions.Add(new ColumnDefinition(col.Width));
+        }
+
+        // Clone grid cells with images
+        for (int row = 0; row < numRows; row++)
+        {
+            for (int col = 0; col < numCols; col++)
+            {
+                Border sourceCell = sourceGrid.Children[row * numCols + col] as Border;
+                Border clonedCell = new Border
+                {
+                    BorderThickness = new Thickness(1),
+                    BorderBrush = new SolidColorBrush(Colors.LightGray)
+                };
+
+                string state = CellState.GetState(sourceCell);
+
+                double f = r.NextDouble();
+                double variation = 0.1;
+
+                string path = "./resources/tilesets/" + tileset + "/";
+                string df = f > variation ? "default.png" : "random.png";
+                string imagePath = path + (state == "shaded" ? "shaded.png" : df);
+
+                    
+                clonedCell.Background = new ImageBrush(new Bitmap(imagePath));
+
+                Grid.SetRow(clonedCell, row);
+                Grid.SetColumn(clonedCell, col);
+                clonedGrid.Children.Add(clonedCell);
+            }
+        }
+
+        return clonedGrid;
+    }
+
+    private void PopulateTilesetComboBox()
+    {
+        string tilesetsPath = "./resources/tilesets";
+        List<string> tilesetNames = new List<string>();
+
+        if (Directory.Exists(tilesetsPath))
+        {
+            string[] directories = Directory.GetDirectories(tilesetsPath);
+            foreach (string directory in directories)
+            {
+                string directoryName = Path.GetFileName(directory);
+                tilesetNames.Add(directoryName);
+            }
+        }
+
+        tilesetSelect.Items = tilesetNames;
+        if (tilesetSelect.Items.Equals == null)
+        {
+            return;
+        } else {
+            tilesetSelect.SelectedIndex = 0;
+        }
+    }
+
+    private void OnTilesetSelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        if (tilesetSelect.SelectedItem != null)
+        {
+            tileset = tilesetSelect.SelectedItem.ToString();
+        }
+    }
 }

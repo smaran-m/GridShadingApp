@@ -17,5 +17,8 @@ build_property.ProjectDir = c:\Users\Smaran\Documents\Code\projects\GridShadingA
 [c:/Users/Smaran/Documents/Code/projects/GridShadingApp/App.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
+[c:/Users/Smaran/Documents/Code/projects/GridShadingApp/GeneratedWindow.axaml]
+build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
+
 [c:/Users/Smaran/Documents/Code/projects/GridShadingApp/MainWindow.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml

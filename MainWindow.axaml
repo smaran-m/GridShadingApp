@@ -7,6 +7,14 @@
         MinHeight="720"
         Title="Grid Editor">
 
+    <Window.Styles>
+        <Style Selector="Button">
+            <!-- Setter Property="Background" Value="White" /-->
+            <Setter Property="FontFamily" Value="Pixel Arial 11" />
+            <Setter Property="HorizontalContentAlignment" Value="Center" />
+        </Style>
+    </Window.Styles>
+
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
@@ -17,9 +25,17 @@
             <Grid x:Name="mainGrid"/>
         </Viewbox>
         <StackPanel Grid.Column="1" Orientation="Vertical">
-			<Button x:Name="saveButton" Content="Save Grid" Margin="10" FontFamily="Pixel Arial 11" FontSize="10" />
-			<Button x:Name="loadButton" Content="Load Grid" Margin="10" FontFamily="Pixel Arial 11" FontSize="10" />
-            <Button x:Name="resetButton" Content="Reset Grid" Margin="10" FontFamily="Pixel Arial 11" FontSize="10" />
+			<Button x:Name="saveButton" Content="Save" Margin="10" FontSize="10" Width="80" />
+			<Button x:Name="loadButton" Content="Load" Margin="10" FontSize="10" Width="80" />
+            <Button x:Name="resetButton" Content="Reset" Margin="10" FontSize="10" Width="80" />
+            <Button x:Name="generateButton" Content="Generate" Margin="10" FontSize="10" Width="80" />
+            <ComboBox x:Name="tilesetSelect" SelectedIndex="0" Margin="10" FontFamily="Pixel Arial 11" FontSize="8" SelectionChanged="OnTilesetSelectionChanged" Width="80">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding}" TextTrimming="CharacterEllipsis" />
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
         </StackPanel>
     </Grid>
 </Window>
