@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text.Json;
 using Avalonia;
 using Avalonia.Controls;
@@ -30,6 +31,7 @@ public partial class MainWindow : Window
         this.Opened += MainWindow_Opened;
         mainGrid.PointerMoved += MainGrid_PointerMoved;
         saveButton.Click += SaveButton_Click;
+        loadButton.Click += LoadButton_Click;
 
         // Event Handlers
         void MainWindow_Opened(object sender, EventArgs e)
@@ -38,36 +40,6 @@ public partial class MainWindow : Window
             cellSize = Math.Min(windowSize.Width / numCols, windowSize.Height / numRows);
             CreateGrid();
         }
-
-        /*void MainWindow_LayoutUpdated(object? sender, EventArgs e)
-        {
-            var windowSize = this.ClientSize;
-            double aspectRatio = (double)numCols / numRows;
-            double newWidth = windowSize.Width;
-            double newHeight = windowSize.Height;
-
-            if (newWidth / newHeight > aspectRatio)
-            {
-                newWidth = newHeight * aspectRatio;
-            }
-            else
-            {
-                newHeight = newWidth / aspectRatio;
-            }
-
-            this.ClientSize = new Size(newWidth, newHeight);
-
-            cellSize = Math.Min(newWidth / numCols, newHeight / numRows);
-
-            foreach (var child in mainGrid.Children)
-            {
-                if (child is Border cell)
-                {
-                    cell.Width = cellSize;
-                    cell.Height = cellSize;
-                }
-            }
-        }*/
     }
 
     private void CreateGrid()
@@ -112,7 +84,7 @@ public partial class MainWindow : Window
         if (sender is Border cell)
         {
             isDragging = true;
-            cell.Background = cell.Background == shadedBrush ? defaultBrush : shadedBrush;
+            SetCellBackground(cell, cell.Background == defaultBrush);
             modifiedCells.Add(cell);
         }
     }
@@ -131,7 +103,7 @@ public partial class MainWindow : Window
                 if (cell != null && !modifiedCells.Contains(cell))
                 {
                     // Toggle the cell background between shadedBrush and defaultBrush
-                    cell.Background = cell.Background == shadedBrush ? defaultBrush : shadedBrush;
+                    SetCellBackground(cell, cell.Background == defaultBrush);
                     modifiedCells.Add(cell);
                 }
             }
@@ -143,6 +115,19 @@ public partial class MainWindow : Window
         isDragging = false;
         modifiedCells.Clear(); // Clear the modified cells set
     }
+    private void SetCellBackground(Border cell, bool shaded)
+    {
+        if (shaded)
+        {
+            cell.Background = shadedBrush;
+            CellState.SetState(cell, "shaded");
+        }
+        else
+        {
+            cell.Background = defaultBrush;
+            CellState.SetState(cell, "default");
+        }
+    }
 
     private void SaveButton_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
     {
@@ -151,24 +136,78 @@ public partial class MainWindow : Window
 
     private void SaveGridState()
     {
-        // You can use the modifiedCells set to save the state of the grid.
-        // For example, you can store the row and column information and the brush color.
-        List<(int row, int col, string color)> gridState = new List<(int row, int col, string color)>();
+        List<CellData> gridState = new List<CellData>();
 
-        foreach (Border cell in modifiedCells)
+        for (int row = 0; row < numRows; row++)
         {
-            int row = Grid.GetRow(cell);
-            int col = Grid.GetColumn(cell);
-            string color = cell.Background == shadedBrush ? "shaded" : "default";
-
-            gridState.Add((row, col, color));
+            for (int col = 0; col < numCols; col++)
+            {
+                Border cell = mainGrid.Children[row * numCols + col] as Border;
+                if (cell != null)
+                {
+                    string state = CellState.GetState(cell);
+                    gridState.Add(new CellData(row, col, state));
+                }
+            }
         }
 
-        // Save the gridState to a file or any other storage you prefer.
-        // For example, you can serialize the gridState list and save it to a file.
+        if (!Directory.Exists("saves"))
+        {
+        Directory.CreateDirectory("saves");
+        }
+
+
+        int fileNumber = 1;
+        string fileName;
+        do
+        {
+            fileName = Path.Combine("saves", $"gridState{fileNumber}.json");
+            fileNumber++;
+        }
+        while (File.Exists(fileName));
+
+        // Save the gridState to the new file.
         string json = JsonSerializer.Serialize(gridState);
-        Console.WriteLine(gridState);
-        File.WriteAllText("gridState.json", json);
+        File.WriteAllText(fileName, json);
     }
 
+    private void LoadButton_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
+    {
+        LoadGridState();
+    }
+
+   private void LoadGridState()
+    {
+        OpenFileDialog dialog = new OpenFileDialog();
+        dialog.Filters.Add(new FileDialogFilter() { Name = "JSON Files", Extensions = { "json" } });
+        string[] fileNames = dialog.ShowAsync(this).GetAwaiter().GetResult();
+
+        if (fileNames.Length == 0)
+        {
+            return; // User cancelled the file selection.
+        }
+
+        string fileName = fileNames[0];
+
+        // Load the grid state from the selected file.
+        string json = File.ReadAllText(fileName);
+        Console.WriteLine("Loaded JSON data:");
+        Console.WriteLine(json);
+        List<CellData> gridState = JsonSerializer.Deserialize<List<CellData>>(json);
+        Console.WriteLine("Deserialized grid state:");
+        foreach (var cellData in gridState)
+        {
+            Console.WriteLine($"({cellData.Row}, {cellData.Col}): {cellData.State}");
+        }
+
+        // Update the grid with the loaded state.
+        foreach (CellData cellData in gridState)
+        {
+            Border cell = mainGrid.Children[cellData.Row * numCols + cellData.Col] as Border;
+            if (cell != null)
+            {
+                CellState.SetState(cell, cellData.State);
+            }
+        }
+    }
 }
