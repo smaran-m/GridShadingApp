@@ -22,4 +22,16 @@
   <ItemGroup>
     <None Include="Images\**" />
   </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="resources\fonts\PIXEARG_.TTF" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="resources\images\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="resources\fonts\PIXEARG_.TTF" />
+  </ItemGroup>
 </Project>

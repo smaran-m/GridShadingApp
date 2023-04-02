@@ -1,13 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text.Json;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Media;
-using Avalonia.Media.Imaging;
 
 namespace GridShadingApp;
 
@@ -19,7 +17,8 @@ public partial class MainWindow : Window
     //private SolidColorBrush defaultBrush = new SolidColorBrush(Colors.White);
     private SolidColorBrush defaultBrush = new SolidColorBrush(Colors.Transparent);
     private SolidColorBrush shadedBrush = new SolidColorBrush(Colors.Black);
-    private ImageBrush imageBrush = new ImageBrush(new Bitmap("Images/test.png"));
+
+    //private ImageBrush imageBrush = new ImageBrush(new Bitmap("resources/images/test.png"));
     private HashSet<Border> modifiedCells = new HashSet<Border>();
 
 
@@ -161,7 +160,7 @@ public partial class MainWindow : Window
         string fileName;
         do
         {
-            fileName = Path.Combine("saves", $"gridState{fileNumber}.json");
+            fileName = Path.Combine("saves", $"grid_{fileNumber}.json");
             fileNumber++;
         }
         while (File.Exists(fileName));
@@ -208,6 +207,8 @@ public partial class MainWindow : Window
             {
                 CellState.SetState(cell, cellData.State);
             }
+            
+            // THIS DOESN'T WORK YET, MAYBE NEED TO REFRESH MainWindow AFTER SETTING STATES
         }
     }
 }
