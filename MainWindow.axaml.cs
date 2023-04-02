@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text.Json;
 using Avalonia;
 using Avalonia.Controls;
@@ -31,6 +32,7 @@ public partial class MainWindow : Window
         mainGrid.PointerMoved += MainGrid_PointerMoved;
         saveButton.Click += SaveButton_Click;
         loadButton.Click += LoadButton_Click;
+        resetButton.Click += ResetButton_Click;
 
         // Event Handlers
         void MainWindow_Opened(object sender, EventArgs e)
@@ -43,6 +45,10 @@ public partial class MainWindow : Window
 
     private void CreateGrid()
     {
+        mainGrid.Children.Clear();
+        mainGrid.RowDefinitions.Clear();
+        mainGrid.ColumnDefinitions.Clear();
+
         for (int i = 0; i < numRows; i++)
         {
             mainGrid.RowDefinitions.Add(new RowDefinition());
@@ -181,7 +187,7 @@ public partial class MainWindow : Window
         dialog.Filters.Add(new FileDialogFilter() { Name = "JSON Files", Extensions = { "json" } });
         string[] fileNames = dialog.ShowAsync(this).GetAwaiter().GetResult();
 
-        if (fileNames.Length == 0)
+        if (fileNames == null || fileNames.Length == 0)
         {
             return; // User cancelled the file selection.
         }
@@ -190,25 +196,26 @@ public partial class MainWindow : Window
 
         // Load the grid state from the selected file.
         string json = File.ReadAllText(fileName);
-        Console.WriteLine("Loaded JSON data:");
-        Console.WriteLine(json);
         List<CellData> gridState = JsonSerializer.Deserialize<List<CellData>>(json);
-        Console.WriteLine("Deserialized grid state:");
-        foreach (var cellData in gridState)
-        {
-            Console.WriteLine($"({cellData.Row}, {cellData.Col}): {cellData.State}");
-        }
 
-        // Update the grid with the loaded state.
+        // Clear the grid's children
+        CreateGrid();
+
+        // Iterate through the deserialized grid state
         foreach (CellData cellData in gridState)
         {
+            // Find the corresponding cell in the grid
             Border cell = mainGrid.Children[cellData.Row * numCols + cellData.Col] as Border;
-            if (cell != null)
-            {
-                CellState.SetState(cell, cellData.State);
-            }
-            
-            // THIS DOESN'T WORK YET, MAYBE NEED TO REFRESH MainWindow AFTER SETTING STATES
+
+            // Set the cell's state and background
+            CellState.SetState(cell, cellData.State);
+            SetCellBackground(cell, cellData.State == "shaded");
         }
     }
+
+    private void ResetButton_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
+    {
+        CreateGrid();
+    }
+
 }

@@ -19,7 +19,7 @@
         <StackPanel Grid.Column="1" Orientation="Vertical">
 			<Button x:Name="saveButton" Content="Save Grid" Margin="10" FontFamily="Pixel Arial 11" FontSize="10" />
 			<Button x:Name="loadButton" Content="Load Grid" Margin="10" FontFamily="Pixel Arial 11" FontSize="10" />
-            <Button x:Name="generateButton" Content="Generate" Margin="10" FontFamily="Pixel Arial 11" FontSize="10" />
+            <Button x:Name="resetButton" Content="Reset Grid" Margin="10" FontFamily="Pixel Arial 11" FontSize="10" />
         </StackPanel>
     </Grid>
 </Window>
