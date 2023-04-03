@@ -4376,11 +4376,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "c:\\Users\\Smaran\\Documents\\Code\\projects\\GridShadingApp\\GridShadingApp.csproj",
+      "projectUniqueName": "C:\\Users\\Smaran\\Documents\\Code\\projects\\GridShadingApp\\GridShadingApp.csproj",
       "projectName": "GridShadingApp",
-      "projectPath": "c:\\Users\\Smaran\\Documents\\Code\\projects\\GridShadingApp\\GridShadingApp.csproj",
+      "projectPath": "C:\\Users\\Smaran\\Documents\\Code\\projects\\GridShadingApp\\GridShadingApp.csproj",
       "packagesPath": "C:\\Users\\Smaran\\.nuget\\packages\\",
-      "outputPath": "c:\\Users\\Smaran\\Documents\\Code\\projects\\GridShadingApp\\obj\\",
+      "outputPath": "C:\\Users\\Smaran\\Documents\\Code\\projects\\GridShadingApp\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

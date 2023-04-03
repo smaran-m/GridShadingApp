@@ -18,6 +18,9 @@ public partial class MainWindow : Window
     //private SolidColorBrush defaultBrush = new SolidColorBrush(Colors.White);
     private SolidColorBrush defaultBrush = new SolidColorBrush(Colors.Transparent);
     private SolidColorBrush shadedBrush = new SolidColorBrush(Colors.Black);
+    private SolidColorBrush variantBrush = new SolidColorBrush(Colors.DarkRed);
+    private SolidColorBrush currentBrush;
+
     private HashSet<Border> modifiedCells = new HashSet<Border>();
     private Random r = new Random();
 
@@ -28,12 +31,16 @@ public partial class MainWindow : Window
         InitializeComponent();
         PopulateTilesetComboBox();
         //this.CanResize = false;
+        currentBrush = shadedBrush;
+        colorButton.Background = shadedBrush;
+        
         this.Opened += MainWindow_Opened;
         mainGrid.PointerMoved += MainGrid_PointerMoved;
         saveButton.Click += SaveButton_Click;
         loadButton.Click += LoadButton_Click;
         resetButton.Click += ResetButton_Click;
         generateButton.Click += GenerateButton_Click;
+        colorButton.Click += ColorButton_Click;
 
         // Event Handlers
         void MainWindow_Opened(object sender, EventArgs e)
@@ -125,7 +132,7 @@ public partial class MainWindow : Window
     {
         if (shaded)
         {
-            cell.Background = shadedBrush;
+            cell.Background = currentBrush;
             CellState.SetState(cell, "shaded");
         }
         else
@@ -182,6 +189,17 @@ public partial class MainWindow : Window
         LoadGridState();
     }
 
+    private void ColorButton_Click(object sender, Avalonia.Interactivity.RoutedEventArgs e)
+    {
+        SolidColorBrush[] brushes = { shadedBrush, variantBrush, defaultBrush };
+        int currentIndex = Array.IndexOf(brushes, colorButton.Background);
+
+        int nextIndex = (currentIndex + 1) % brushes.Length;
+        colorButton.Background = brushes[nextIndex];
+        currentBrush = brushes[nextIndex];
+    }
+
+
    private void LoadGridState()
     {
         OpenFileDialog dialog = new OpenFileDialog();
@@ -210,7 +228,7 @@ public partial class MainWindow : Window
 
             // Set the cell's state and background
             CellState.SetState(cell, cellData.State);
-            SetCellBackground(cell, cellData.State == "shaded");
+            SetCellBackground(cell, cellData.State == "shaded"); // add variants
         }
     }
 
