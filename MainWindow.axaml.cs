@@ -287,8 +287,11 @@ public partial class MainWindow : Window
                 string df = f > variation ? "default.png" : "random.png";
                 string imagePath = path + (state == "shaded" ? "shaded.png" : df);
 
-                    
-                clonedCell.Background = new ImageBrush(new Bitmap(imagePath));
+                if (File.Exists(imagePath)) {
+                    clonedCell.Background = new ImageBrush(new Bitmap(imagePath));
+                } else {
+                    clonedCell.Background = new ImageBrush(new Bitmap(("./resources/tilesets/default/" + (state == "shaded" ? "shaded.png" : df))));
+                }
 
                 Grid.SetRow(clonedCell, row);
                 Grid.SetColumn(clonedCell, col);
