@@ -164,10 +164,7 @@ public partial class MainWindow : Window
             }
         }
 
-        if (!Directory.Exists("saves"))
-        {
-        Directory.CreateDirectory("saves");
-        }
+        if (!Directory.Exists("saves")) { Directory.CreateDirectory("saves"); }
 
 
         int fileNumber = 1;
@@ -287,11 +284,11 @@ public partial class MainWindow : Window
                 string df = f > variation ? "default.png" : "random.png";
                 string imagePath = path + (state == "shaded" ? "shaded.png" : df);
 
-                if (File.Exists(imagePath)) {
-                    clonedCell.Background = new ImageBrush(new Bitmap(imagePath));
-                } else {
-                    clonedCell.Background = new ImageBrush(new Bitmap(("./resources/tilesets/default/" + (state == "shaded" ? "shaded.png" : df))));
+                if (!File.Exists(imagePath)) {
+                    imagePath = ("./resources/tilesets/default/" + (state == "shaded" ? "shaded.png" : df));
                 }
+
+                clonedCell.Background = new ImageBrush(new Bitmap(imagePath));
 
                 Grid.SetRow(clonedCell, row);
                 Grid.SetColumn(clonedCell, col);
