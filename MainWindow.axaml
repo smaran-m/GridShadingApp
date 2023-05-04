@@ -37,8 +37,8 @@
                 </ComboBox.ItemTemplate>
             </ComboBox>
         </StackPanel>
-        <Border x:Name="colorButtonBorder" Grid.Column="1" BorderThickness="1" BorderBrush="LightGray" Margin="10" HorizontalAlignment="Center" VerticalAlignment="Bottom">
+        <!-- Border x:Name="colorButtonBorder" Grid.Column="1" BorderThickness="1" BorderBrush="LightGray" Margin="10" HorizontalAlignment="Center" VerticalAlignment="Bottom">
             <Button x:Name="colorButton" Width="60" Height="60" Margin="5" VerticalAlignment="Bottom" HorizontalAlignment="Center" />
-        </Border>
+        </Border -->
     </Grid>
 </Window>
