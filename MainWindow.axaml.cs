@@ -32,7 +32,7 @@ public partial class MainWindow : Window
         PopulateTilesetComboBox();
         //this.CanResize = false;
         currentBrush = shadedBrush;
-        colorButton.Background = shadedBrush;
+        //colorButton.Background = shadedBrush;
         
         this.Opened += MainWindow_Opened;
         mainGrid.PointerMoved += MainGrid_PointerMoved;
@@ -40,7 +40,7 @@ public partial class MainWindow : Window
         loadButton.Click += LoadButton_Click;
         resetButton.Click += ResetButton_Click;
         generateButton.Click += GenerateButton_Click;
-        colorButton.Click += ColorButton_Click;
+        //colorButton.Click += ColorButton_Click;
 
         // Event Handlers
         void MainWindow_Opened(object sender, EventArgs e)
@@ -133,12 +133,12 @@ public partial class MainWindow : Window
         if (shaded)
         {
             cell.Background = currentBrush;
-            CellState.SetState(cell, "shaded");
+            Cell.SetState(cell, "shaded");
         }
         else
         {
             cell.Background = defaultBrush;
-            CellState.SetState(cell, "default");
+            Cell.SetState(cell, "default");
         }
     }
 
@@ -149,7 +149,7 @@ public partial class MainWindow : Window
 
     private void SaveGridState()
     {
-        List<CellData> gridState = new List<CellData>();
+        List<Cell> gridState = new List<Cell>();
 
         for (int row = 0; row < numRows; row++)
         {
@@ -158,8 +158,8 @@ public partial class MainWindow : Window
                 Border cell = mainGrid.Children[row * numCols + col] as Border;
                 if (cell != null)
                 {
-                    string state = CellState.GetState(cell);
-                    gridState.Add(new CellData(row, col, state));
+                    string state = Cell.GetState(cell);
+                    gridState.Add(new Cell(row, col, state));
                 }
             }
         }
@@ -186,7 +186,7 @@ public partial class MainWindow : Window
         LoadGridState();
     }
 
-    private void ColorButton_Click(object sender, Avalonia.Interactivity.RoutedEventArgs e)
+    /*private void ColorButton_Click(object sender, Avalonia.Interactivity.RoutedEventArgs e)
     {
         SolidColorBrush[] brushes = { shadedBrush, variantBrush, defaultBrush };
         int currentIndex = Array.IndexOf(brushes, colorButton.Background);
@@ -194,7 +194,7 @@ public partial class MainWindow : Window
         int nextIndex = (currentIndex + 1) % brushes.Length;
         colorButton.Background = brushes[nextIndex];
         currentBrush = brushes[nextIndex];
-    }
+    }*/
 
 
    private void LoadGridState()
@@ -212,20 +212,20 @@ public partial class MainWindow : Window
 
         // Load the grid state from the selected file.
         string json = File.ReadAllText(fileName);
-        List<CellData> gridState = JsonSerializer.Deserialize<List<CellData>>(json);
+        List<Cell> gridState = JsonSerializer.Deserialize<List<Cell>>(json);
 
         // Clear the grid's children
         CreateGrid();
 
         // Iterate through the deserialized grid state
-        foreach (CellData cellData in gridState)
+        foreach (Cell Cell in gridState)
         {
             // Find the corresponding cell in the grid
-            Border cell = mainGrid.Children[cellData.Row * numCols + cellData.Col] as Border;
+            Border cell = mainGrid.Children[Cell.Row * numCols + Cell.Col] as Border;
 
             // Set the cell's state and background
-            CellState.SetState(cell, cellData.State);
-            SetCellBackground(cell, cellData.State == "shaded"); // add variants
+            Cell.SetState(cell, Cell.State);
+            SetCellBackground(cell, Cell.State == "shaded"); // add variants
         }
     }
 
@@ -275,7 +275,7 @@ public partial class MainWindow : Window
                     BorderBrush = new SolidColorBrush(Colors.LightGray)
                 };
 
-                string state = CellState.GetState(sourceCell);
+                string state = Cell.GetState(sourceCell);
 
                 double f = r.NextDouble();
                 double variation = 0.1;
@@ -285,7 +285,7 @@ public partial class MainWindow : Window
                 string imagePath = path + (state == "shaded" ? "shaded.png" : df);
 
                 if (!File.Exists(imagePath)) {
-                    imagePath = ("./resources/tilesets/default/" + (state == "shaded" ? "shaded.png" : df));
+                    imagePath = ("./resources/data/default/" + (state == "shaded" ? "shaded.png" : df));
                 }
 
                 clonedCell.Background = new ImageBrush(new Bitmap(imagePath));
